@@ -1,4 +1,4 @@
-Rmpi_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
+MPI_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
     if(length(attributes) == 0)
         stop("Attributes not specified")
     
