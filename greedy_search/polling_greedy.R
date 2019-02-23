@@ -1,3 +1,10 @@
+polling_forward.search <- function(attributes, eval.fun) {
+	return(polling_greedy.search(attributes, eval.fun, TRUE))
+}
+
+polling_backward.search <- function(attributes, eval.fun) {
+	return(polling_greedy.search(attributes, eval.fun, FALSE))
+}
 polling_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
     if(length(attributes) == 0)
         stop("Attributes not specified")

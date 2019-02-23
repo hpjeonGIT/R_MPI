@@ -1,3 +1,10 @@
+MPI_forward.search <- function(attributes, eval.fun) {
+	return(MPI_greedy.search(attributes, eval.fun, TRUE))
+}
+
+MPI_backward.search <- function(attributes, eval.fun) {
+	return(MPI_greedy.search(attributes, eval.fun, FALSE))
+}
 MPI_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
     if(length(attributes) == 0)
         stop("Attributes not specified")
@@ -27,8 +34,13 @@ MPI_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
         nrow <- dim(children)[1]; children_results=double(length=nrow)
         ncol  <- dim(children)[2]
         children_results[1:nrow] <- -Inf
-        i_ini <- as.integer(myid*nrow/NCPUS + 1)
-        i_fin <- as.integer((myid+1)*nrow/NCPUS)
+        i_ini <- as.integer(myrank*nrow/NCPUS + 1)
+        i_fin <- as.integer((myrank+1)*nrow/NCPUS)
+        if (i_fin < i_ini) {
+            cat("The size of the data is too small. Stops here\n")
+            mpi.quit()
+            quit("yes")
+        }
         ## loop distribution
         for (i in i_ini:i_fin) {
             children_results[i] = eval.fun(attributes[as.logical(children[i,])])
@@ -39,7 +51,7 @@ MPI_greedy.search <- function(attributes, eval.fun, forward = TRUE) {
         world_best <- allred[1]
         rank_id <- as.integer(allred[2])
         world_id <- mpi.bcast(local_best$idx, type=1, rank=rank_id, comm=0)
-        if(world_best > best$result & myid == 0 ) {
+        if(world_best > best$result & myrank == 0 ) {
             best$result = world_best
             best$attrs = children[world_id,]
             tag_break = world_id
