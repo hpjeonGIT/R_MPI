@@ -1,7 +1,7 @@
-# Sample R script using Rmpi
+# Sample R scripts using Rmpi
 - For distributed computing using MPI
 - Requires Rmpi package with MPI environment
-    - In windows, using MS-MPI
+    - In Windows, use MS-MPI
     - in Linux, openmpi is recommended while intel mpi or mvapich works too
 
 ## exhaustive_search
